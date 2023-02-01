@@ -2,7 +2,7 @@ package br.com.alura.leilao.model;
 
 import java.io.Serializable;
 
-public class Lance implements Serializable {
+public class Lance implements Serializable, Comparable {
 
     private final Usuario usuario;
     private final double valor;
@@ -16,4 +16,10 @@ public class Lance implements Serializable {
         return valor;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        Lance lance = (Lance) o;
+        return Double.compare(lance.getValor(), valor);
+
+    }
 }
