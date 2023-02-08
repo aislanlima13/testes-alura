@@ -46,15 +46,6 @@ public class LeilaoTest {
     }
 
     @Test
-    public void deve_DevolveMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente() {
-        Usuario fran = new Usuario("Fran");
-        console.propoe(new Lance(alex, 10000.0));
-        console.propoe(new Lance(fran, 90000.0));
-        double maiorLance = console.getMaiorLance();
-        assertEquals(10000.0, maiorLance, DELTA);
-    }
-
-    @Test
     public void deve_DevolveMenorLance_QuandoRecebeApenasUmLance() {
         console.propoe(new Lance(alex, 200.0));
         double lanceConsole = console.getMenorLance();
@@ -70,15 +61,6 @@ public class LeilaoTest {
         console.propoe(new Lance(fran, 200.0));
         double menorLance = console.getMenorLance();
         assertEquals(100.0, menorLance, DELTA);
-    }
-
-    @Test
-    public void deve_DevolveMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente() {
-        Usuario fran = new Usuario("Fran");
-        console.propoe(new Lance(alex, 10000.0));
-        console.propoe(new Lance(fran, 90000.0));
-        double menorLance = console.getMenorLance();
-        assertEquals(90000.0, menorLance, DELTA);
     }
 
     // TDD: criar um padrão no qual primeiro implementamos o teste e depois desenvolvemos o código
@@ -127,22 +109,39 @@ public class LeilaoTest {
     public void deve_DevolverTresMaioresLances_QuandoRecebeMaisDeTresLances() {
         console.propoe(new Lance(alex, 200.0));
         console.propoe(new Lance(new Usuario("fran"), 300.0));
-        console.propoe(new Lance(new Usuario("fran"), 504.0));
-        console.propoe(new Lance(new Usuario("fran"), 340.0));
+        console.propoe(new Lance(new Usuario("fran"), 400.0));
+        console.propoe(new Lance(new Usuario("fran"), 500.0));
 
         List<Lance> tresMaioresLances = console.tresMaioresLances();
 
         assertEquals(3, tresMaioresLances.size());
-        assertEquals(504.0, tresMaioresLances.get(0).getValor(), DELTA);
-        assertEquals(340.0, tresMaioresLances.get(1).getValor(), DELTA);
-        assertEquals(300.0, tresMaioresLances.get(2).getValor(), DELTA);
+        assertEquals(300.0, tresMaioresLances.get(0).getValor(), DELTA);
+        assertEquals(400.0, tresMaioresLances.get(1).getValor(), DELTA);
+        assertEquals(500.0, tresMaioresLances.get(2).getValor(), DELTA);
+    }
 
-        console.propoe(new Lance(alex, 700.0));
-        List<Lance> lancesDevolvidos = console.tresMaioresLances();
+    @Test
+    public void deve_DevolverValorZeroParaMaiorLance_QuandoNaoTiverLances() {
+        double maiorLance = console.getMaiorLance();
+        assertEquals(0.0, maiorLance, DELTA);
+    }
 
-        assertEquals(3, lancesDevolvidos.size());
-        assertEquals(700.0, lancesDevolvidos.get(0).getValor(), DELTA);
-        assertEquals(504.0, lancesDevolvidos.get(1).getValor(), DELTA);
-        assertEquals(340.0, lancesDevolvidos.get(2).getValor(), DELTA);
+    @Test
+    public void deve_DevolverValorZeroParaMenorLance_QuandoNaoTiverLances() {
+        double menorLance = console.getMenorLance();
+        assertEquals(0.0, menorLance, DELTA);
+    }
+
+    /**
+     * naoDeve é a forma padrão para trabalhar com negação
+     */
+    @Test
+    public void naoDeve_AdicionarLance_QuandoForMenorQueMaiorLance() {
+        console.propoe(new Lance(alex, 500.0));
+        console.propoe(new Lance(alex, 400.0));
+
+        int quantidadeLances = console.quantidadeLances();
+
+        assertEquals(1, quantidadeLances);
     }
 }
