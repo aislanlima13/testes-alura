@@ -6,6 +6,10 @@ import org.junit.Test;
 
 import java.util.List;
 
+import br.com.alura.leilao.exception.LanceMenorQueUltimoLanceException;
+import br.com.alura.leilao.exception.LanceSeguidoDoMesmoUsuarioException;
+import br.com.alura.leilao.exception.UsuarioJaDeuCincoLancesException;
+
 // Cada execução é uma nova instância da classe de testes
 public class LeilaoTest {
 
@@ -135,27 +139,19 @@ public class LeilaoTest {
     /**
      * naoDeve é a forma padrão para trabalhar com negação
      */
-    @Test
+    @Test(expected = LanceMenorQueUltimoLanceException.class)
     public void naoDeve_AdicionarLance_QuandoForMenorQueMaiorLance() {
         console.propoe(new Lance(alex, 500.0));
         console.propoe(new Lance(alex, 400.0));
-
-        int quantidadeLances = console.quantidadeLances();
-
-        assertEquals(1, quantidadeLances);
     }
 
-    @Test
+    @Test(expected = LanceSeguidoDoMesmoUsuarioException.class)
     public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance() {
         console.propoe(new Lance(alex, 500.00));
         console.propoe(new Lance(alex, 600.00));
-
-        int quantidadeLances = console.quantidadeLances();
-
-        assertEquals(1, quantidadeLances);
     }
 
-    @Test
+    @Test(expected = UsuarioJaDeuCincoLancesException.class)
     public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances() {
         final Usuario FRAN = new Usuario("Fran");
         console.propoe(new Lance(FRAN, 100.00));
@@ -169,10 +165,5 @@ public class LeilaoTest {
         console.propoe(new Lance(FRAN, 900.00));
         console.propoe(new Lance(alex, 1000.00));
         console.propoe(new Lance(FRAN, 1100.00));
-        console.propoe(new Lance(alex, 1200.00));
-
-        int quantidadeLances = console.quantidadeLances();
-
-        assertEquals(10, quantidadeLances);
     }
 }
