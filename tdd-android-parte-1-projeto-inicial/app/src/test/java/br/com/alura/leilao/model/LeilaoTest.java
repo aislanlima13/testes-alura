@@ -1,5 +1,12 @@
 package br.com.alura.leilao.model;
 
+import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -23,7 +30,7 @@ public class LeilaoTest {
         String descricaoDevolvida = console.getDescricao();
 
         // testar resultado esperado
-        assertEquals("console", descricaoDevolvida);
+        assertThat(descricaoDevolvida, is(equalTo("console")));
     }
 
     // Como nomear testes:
@@ -33,11 +40,12 @@ public class LeilaoTest {
     public void deve_DevolveMaiorLance_QuandoRecebeApenasUmLance() {
         console.propoe(new Lance(alex, 200.0));
 
-        double lanceConsole = console.getMaiorLance();
+        double maiorLanceDevolvido = console.getMaiorLance();
 
         // delta pega a diferença entre os valores com ponto flutuante e se ele for maior,
         // significa que os valores são equivalentes
-        assertEquals(200.0, lanceConsole, DELTA);
+//        assertEquals(200.0, lanceConsole, DELTA);
+        assertThat(maiorLanceDevolvido, closeTo(200.0, DELTA));
     }
 
     @Test
@@ -74,12 +82,30 @@ public class LeilaoTest {
         console.propoe(new Lance(new Usuario("fran"), 300.0));
         console.propoe(new Lance(alex, 400.0));
 
-        List<Lance> tresMaioresLances = console.tresMaioresLances();
+        List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
 
-        assertEquals(3, tresMaioresLances.size());
-        assertEquals(400.0, tresMaioresLances.get(0).getValor(), DELTA);
-        assertEquals(300.0, tresMaioresLances.get(1).getValor(), DELTA);
-        assertEquals(200.0, tresMaioresLances.get(2).getValor(), DELTA);
+//        assertEquals(3, tresMaioresLances.size());
+        /** Para verificar tamanho de lista **/
+        assertThat(tresMaioresLancesDevolvidos, hasSize(equalTo(3)));
+
+//        assertEquals(400.0, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
+        /** para verificar se tem o item **/
+//        assertThat(tresMaioresLancesDevolvidos, hasItem(new Lance(alex, 400.0)));
+//        assertEquals(300.0, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
+//        assertEquals(200.0, tresMaioresLancesDevolvidos.get(2).getValor(), DELTA);
+        /** para verificar os itens que devem retornar os 3 mariores lances **/
+        /*assertThat(tresMaioresLancesDevolvidos, contains(
+                new Lance(alex, 400.0),
+                new Lance(new Usuario("fran"), 300.0),
+                new Lance(alex, 200.0)
+        ));*/
+
+        /** retorna tamanho da lista e itens esperados */
+        assertThat(tresMaioresLancesDevolvidos, both(hasSize(3)).and(contains(
+                new Lance(alex, 400.0),
+                new Lance(new Usuario("fran"), 300.0),
+                new Lance(alex, 200.0)
+        )));
     }
 
     @Test
